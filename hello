@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'MAVEN_HOME' 
+    }
+
+    stages {
+        stage('Welcome') {
+            steps {
+                echo "Welcome to Jenkins Pipeline Execution!"
+                echo "Build Number: ${env.BUILD_NUMBER}"
+            }
+        }
+
+        stage('Git Repo & Clean') {
+            steps {
+                bat "git clone https://github.com/Jaichey/Maven_jenkins.git"
+                bat "mvn clean -f Maven_jenkins/pom.xml"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat "mvn compile -f Maven_jenkins/pom.xml"
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat "mvn test -f Maven_jenkins/pom.xml"
+            }
+        }
+
+        stage('Package') {
+            steps {
+                bat "mvn package -f Maven_jenkins/pom.xml"
+            }
+        }
+    }
+}
